@@ -1,0 +1,237 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║           MIRUS KPI TRACKER - QUICK START (30 MINUTES)                    ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+WHAT YOU'LL GET:
+✓ Private KPI tracking website (anyone can log in, no public data)
+✓ 4 managers submit weekly logs + monthly scores
+✓ AI checks for generic/vague explanations (blocks them)
+✓ Auto-pulls sales metrics from Odoo weekly
+✓ HR + Admin dashboards to review all managers
+✓ Work ethics & warning notes from HR
+✓ Completely FREE hosting (Vercel + Supabase)
+
+═══════════════════════════════════════════════════════════════════════════
+
+STEP 1: CREATE ACCOUNTS (5 MIN)
+
+1. GitHub Account (if you don't have)
+   → https://github.com/signup
+
+2. Vercel Account (link GitHub)
+   → https://vercel.com/signup
+
+3. Supabase Account (link GitHub)
+   → https://supabase.com/sign-up
+
+4. Claude API Key
+   → https://console.anthropic.com/account/keys
+   → Create new key, copy it
+
+═══════════════════════════════════════════════════════════════════════════
+
+STEP 2: DATABASE SETUP (5 MIN)
+
+1. Go to Supabase Dashboard → "New Project" → "mirus-kpi"
+
+2. Go to SQL Editor (left sidebar)
+
+3. Copy-paste ALL the code from: SUPABASE_SETUP.sql
+   (File attached - contains users, logs, metrics tables)
+
+4. Click "Run" → Wait for green checkmark
+
+5. Copy your credentials:
+   - Go to Settings → API
+   - Copy "Project URL" (like https://xxx.supabase.co)
+   - Copy "anon public" key
+
+═══════════════════════════════════════════════════════════════════════════
+
+STEP 3: DEPLOY ON VERCEL (10 MIN)
+
+1. On your computer, open Terminal/Command Prompt
+
+2. Run:
+   git clone https://github.com/your-repo/mirus-kpi.git
+   cd mirus-kpi
+   npm install
+
+3. Create file: .env.local
+   Inside, paste:
+   
+   NEXT_PUBLIC_SUPABASE_URL=https://your-supabase-url.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key_here
+   CLAUDE_API_KEY=sk-ant-xxxxxxxx
+
+4. Test locally:
+   npm run dev
+   → Opens http://localhost:3000
+   → Login with: tsogzolmaa@mirus.mn / password123
+
+5. If it works, deploy to Vercel:
+   git push origin main
+   → Vercel auto-deploys (check vercel.com dashboard)
+
+Your website: https://mirus-kpi.vercel.app
+
+═══════════════════════════════════════════════════════════════════════════
+
+STEP 4: CONNECT ODOO (GIVE TO TECHMARBLES)
+
+Your Odoo team needs to run this Python script WEEKLY (e.g., Sunday 5 AM):
+
+```python
+import requests
+import json
+from datetime import datetime
+
+# Configuration
+SUPABASE_URL = "https://your-supabase.supabase.co"
+SYNC_ENDPOINT = f"{SUPABASE_URL}/api/sync-odoo"
+
+# Get week number
+week_num = datetime.now().isocalendar()[1]
+year = datetime.now().year
+
+# Extract from Odoo POS for each manager
+managers_data = [
+    {
+        "email": "tsogzolmaa@mirus.mn",
+        "sales": 1234567,  # From Odoo: SUM(pos_order.amount_total) WHERE cashier=manager
+        "transactions": 156,  # Count of pos_order records
+        "avg_value": 7908,  # sales / transactions
+        "bundle_rate": 45.5,  # % of orders with 2+ items
+        "refund_rate": 2.1,  # % of orders with refund_approval_status='approved'
+        "top_products": ["Anua Cleanser", "Black Rouge", "Purito Sunscreen"]
+    },
+    # Add other 3 managers similarly...
+]
+
+for mgr in managers_data:
+    response = requests.post(
+        SYNC_ENDPOINT,
+        json={
+            "manager_email": mgr["email"],
+            "week": week_num,
+            "year": year,
+            "sales_amount": mgr["sales"],
+            "transaction_count": mgr["transactions"],
+            "avg_transaction_value": mgr["avg_value"],
+            "bundle_attach_rate": mgr["bundle_rate"],
+            "refund_rate": mgr["refund_rate"],
+            "top_products": mgr["top_products"],
+        }
+    )
+    print(f"Synced {mgr['email']}: {response.status_code}")
+```
+
+Schedule this in Odoo Scheduler or cron job (weekly, e.g., Sundays 5 AM).
+
+═══════════════════════════════════════════════════════════════════════════
+
+TEST ACCOUNTS (after deployment)
+
+Login at: https://mirus-kpi.vercel.app
+
+MANAGER:
+  Email: tsogzolmaa@mirus.mn
+  Pass: password123
+  → Can submit weekly logs
+  → Sees own Odoo metrics
+
+HR:
+  Email: hr@mirus.mn
+  Pass: password123
+  → Dashboard with all 4 managers
+  → Can create new manager accounts
+  → Can add ethics notes & warnings
+
+ADMIN (Michelle):
+  Email: michelle@mirus.mn
+  Pass: password123
+  → Full admin access
+
+═══════════════════════════════════════════════════════════════════════════
+
+HOW IT WORKS
+
+MANAGER WORKFLOW (Weekly):
+1. Log in to website
+2. See their Odoo metrics (auto-pulled):
+   - Sales ₮ this week
+   - # of transactions
+   - Avg order value
+   - Bundle rate
+   - Refund rate
+3. Write weekly reflection:
+   - "Which products did you focus on?" (must be specific)
+   - "What actions did you take?" (must have numbers/dates)
+4. Submit → AI checks for vague/generic content
+   - If APPROVED: ✓ saved
+   - If REJECTED: ⚠️ shows errors ("too vague", "need product names", etc.)
+
+MONTHLY (Last week of month):
+- Manager submits WHAT % and HOW %
+- HR reviews & approves
+- System calculates KPI tier:
+  • 90-100% overall = 100% KPI ✓
+  • 80-89% = 70% KPI
+  • 70-79% = 40% KPI
+  • <70% = 0% KPI
+
+HR WORKFLOW:
+1. Dashboard shows all 4 managers
+2. Click each manager to see:
+   - Weekly logs (with AI feedback)
+   - Odoo metrics (sales trend, quality indicators)
+   - Monthly scores
+3. HR can write:
+   - Work Ethics notes (behavior, cursing, attendance)
+   - Warnings section (things to improve)
+4. Approve monthly submissions
+
+═══════════════════════════════════════════════════════════════════════════
+
+QUALITY ASSESSMENT (AI Blocks Vague Text)
+
+BAD (gets blocked):
+✗ "Gave content manager a list of slow-moving products"
+✗ "Increased sales"
+✗ "Worked hard on merchandise"
+✗ "Improved customer service"
+
+GOOD (gets approved):
+✓ "Focused on Anua Cleanser (45 units sold, +23% vs week 1) and Black Rouge (67 units, +18%). These were Q2 slow movers. Created end-cap displays Monday-Wednesday, trained staff on benefits."
+✓ "Ran 20% discount July 8-10, moved 3 units to prime shelf, baseline sales held +15% after promo ended"
+
+The system checks for:
+- Specific product names
+- Numbers (amounts, percentages, units)
+- Dates/timeframes
+- Concrete actions (not just "worked on")
+
+═══════════════════════════════════════════════════════════════════════════
+
+COST BREAKDOWN
+
+Vercel Free: $0 (unlimited)
+Supabase Free: $0 (500MB storage)
+Claude API: ~$0.50-1/month (weekly checks across 4 managers)
+
+TOTAL: Essentially FREE
+
+═══════════════════════════════════════════════════════════════════════════
+
+NEED HELP?
+
+1. Deployment stuck?
+   → Check DEPLOYMENT-GUIDE.md (detailed step-by-step)
+
+2. Odoo integration questions?
+   → Give ODOO_INTEGRATION.md to Techmarbles
+
+3. Need to add more features?
+   → I can add email notifications, custom KPI rules, etc.
+
+═══════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,191 @@
+═══════════════════════════════════════════════════════════════════════════════
+MIRUS KPI TRACKER - FILE GUIDE
+═══════════════════════════════════════════════════════════════════════════════
+
+I've created everything you need. Here's what each file does:
+
+📄 SETUP-INSTRUCTIONS.txt
+└─ START HERE - Simple 30 minute guide to get website live
+   What to do: Read this first, follow step-by-step
+
+📄 DEPLOYMENT-GUIDE.md
+└─ Detailed technical setup with all code snippets
+   What to do: Use if SETUP-INSTRUCTIONS needs more detail
+
+📄 SUPABASE_SETUP.sql
+└─ Database schema - copy this into Supabase SQL Editor
+   What to do: 
+   1. Go to Supabase dashboard
+   2. Go to SQL Editor
+   3. Paste entire contents
+   4. Click RUN
+
+📄 kpi-app.jsx
+└─ React component with full UI (Manager + HR + Admin views)
+   What to do:
+   1. Save as app/page.tsx in your Next.js project
+   2. Deploy with Vercel
+
+📄 package.json
+└─ Dependencies for the project
+   What to do:
+   1. Copy contents to your project's package.json
+   2. Run: npm install
+
+═══════════════════════════════════════════════════════════════════════════════
+
+QUICK CHECKLIST (30 MINUTES)
+
+☐ 1. Read SETUP-INSTRUCTIONS.txt
+☐ 2. Create accounts:
+     - GitHub
+     - Vercel
+     - Supabase
+     - Anthropic Claude API
+☐ 3. Run SUPABASE_SETUP.sql in Supabase (creates database)
+☐ 4. Create Next.js project:
+     npx create-next-app@latest mirus-kpi
+☐ 5. Copy kpi-app.jsx contents to app/page.tsx
+☐ 6. Copy package.json contents
+☐ 7. npm install
+☐ 8. Create .env.local with your API keys
+☐ 9. npm run dev (test locally)
+☐ 10. git push to GitHub
+☐ 11. Vercel auto-deploys → Your live website!
+
+═══════════════════════════════════════════════════════════════════════════════
+
+WHAT YOU GET
+
+✅ Production-ready KPI tracking website
+✅ 4 managers can log in + submit weekly reflections
+✅ AI quality check blocks vague/generic explanations
+✅ Auto-pulls sales metrics from Odoo
+✅ HR dashboard to review all managers
+✅ Work ethics & warning notes section
+✅ Monthly scoring with KPI tier calculation
+✅ Completely FREE (Vercel + Supabase free tier)
+✅ No credit card needed to deploy
+
+═══════════════════════════════════════════════════════════════════════════════
+
+TEST ACCOUNTS (After deployment)
+
+Login: https://mirus-kpi.vercel.app
+
+Manager:
+  Email: tsogzolmaa@mirus.mn
+  Pass: password123
+
+HR:
+  Email: hr@mirus.mn
+  Pass: password123
+
+Admin:
+  Email: michelle@mirus.mn
+  Pass: password123
+
+═══════════════════════════════════════════════════════════════════════════════
+
+MANAGER WORKFLOW
+
+1. Manager logs in
+2. Sees weekly Odoo metrics (auto-pulled):
+   - Sales ₮
+   - # transactions
+   - Avg order value
+   - Bundle rate
+   - Refund rate
+3. Writes 2 reflections:
+   - "Which products focused on?" → MUST be specific
+   - "What actions taken?" → MUST have numbers/dates
+4. Submits → AI checks
+   - ✓ APPROVED: specific products + numbers + dates
+   - ✗ BLOCKED: "too vague", "need product names", etc.
+5. At month-end, submits WHAT % + HOW %
+6. HR reviews & approves
+
+═══════════════════════════════════════════════════════════════════════════════
+
+HR WORKFLOW
+
+1. HR logs in
+2. Dashboard shows all 4 managers
+3. Click each manager to see:
+   - Weekly logs
+   - Odoo metrics (sales velocity, etc.)
+   - Monthly scores
+4. Can write:
+   - Work Ethics notes (behavior, attendance, cursing)
+   - Warnings section (performance issues)
+5. Approve monthly submissions
+6. Can create new manager accounts (other 3: Ujin, Badmaa, Uchral)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+ADMIN (MICHELLE)
+
+- Full access to everything
+- Can view all managers
+- Can edit any notes/scores
+- Can manage user accounts
+
+═══════════════════════════════════════════════════════════════════════════════
+
+ODOO INTEGRATION (FOR TECHMARBLES)
+
+Your tech team needs to:
+
+1. Create Python script (see ODOO_INTEGRATION.md)
+2. Run weekly (Sundays 5 AM via scheduler)
+3. Extracts from Odoo POS:
+   - Manager sales ₮
+   - Transaction count
+   - Avg transaction value
+   - Product mix
+   - Bundle attach rate
+   - Refund rate
+4. Sends to website via API: /api/sync-odoo
+
+═══════════════════════════════════════════════════════════════════════════════
+
+WHAT IF SOMETHING BREAKS?
+
+Issue: "Vercel deployment failed"
+→ Check that all env variables are set correctly in Vercel dashboard
+
+Issue: "Database connection error"
+→ Check Supabase URL and key in .env.local
+
+Issue: "AI assessment not working"
+→ Check your Claude API key (get from console.anthropic.com)
+
+Issue: "Managers can't see Odoo metrics"
+→ Make sure Techmarbles ran the Odoo sync script (should see data Sunday AM)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+NEXT STEPS AFTER LAUNCH
+
+1. Test with Tsogzolmaa (first manager account)
+2. Give HR access + create other 3 managers
+3. Have Techmarbles set up Odoo sync script
+4. Soft launch - test for 1 week
+5. HR starts using notes section
+6. First month-end scoring cycle (all 4 managers submit WHAT/HOW %)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+WANT TO ADD MORE FEATURES?
+
+I can add:
+- Email notifications (weekly reminders)
+- Custom KPI rules per manager
+- Performance trends (graph weekly progress)
+- Export to Excel
+- Slack integration
+- SMS alerts
+
+Just ask!
+
+═══════════════════════════════════════════════════════════════════════════════
